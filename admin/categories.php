@@ -4,6 +4,7 @@ require_once '../functions.php';
 // 检查用户是否登陆
 bx_get_current_user();
 
+// 添加分类
 function add_categories() {
   if(empty($_POST['name']) || empty($_POST['slug'])){
     $GLOBALS['message'] = '请填写完整的信息';
@@ -49,12 +50,14 @@ $categories = bx_fetch_all('select * from categories');
         <h1>分类目录</h1>
       </div>
       <!-- 有错误信息时展示 -->
-      <div class="alert alert-danger">
-        <strong>错误！</strong>发生XXX错误
-      </div>
+      <?php if(!empty($message)): ?>
+        <div class="alert<?php echo !$success?' alert-danger':' alert-success'; ?>">
+          <strong><?php echo $success?'':'错误！'; ?></strong><?php echo $message; ?>
+        </div>
+      <?php endif ?>      
       <div class="row">
         <div class="col-md-4">
-          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
             <h2>添加新分类目录</h2>
             <div class="form-group">
               <label for="name">名称</label>
@@ -73,7 +76,7 @@ $categories = bx_fetch_all('select * from categories');
         <div class="col-md-8">
           <div class="page-action">
             <!-- show when multiple checked -->
-            <a class="btn btn-danger btn-sm" href="javascript:;" style="display: none">批量删除</a>
+            <a id="btn-delete" class="btn btn-danger btn-sm" href="/admin/category-delete.php?id=<?php echo $item['id']; ?>" style="display: none">批量删除</a>
           </div>
           <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -87,12 +90,12 @@ $categories = bx_fetch_all('select * from categories');
             <tbody>
               <?php foreach ($categories as $item): ?>
               <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td><?php echo $item['name'] ?></td>
-                <td><?php echo $item['slug'] ?></td>
+                <td class="text-center"><input type="checkbox" data-id="<?php echo $item['id']; ?>"></td>
+                <td><?php echo $item['name']; ?></td>
+                <td><?php echo $item['slug']; ?></td>
                 <td class="text-center">
-                  <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                  <a href="/admin/categories.php?id=<?php echo $item['id']; ?>" class="btn btn-info btn-xs">编辑</a>
+                  <a href="/admin/category-delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-xs">删除</a>
                 </td>
               </tr>
               <?php endforeach ?>
@@ -106,9 +109,33 @@ $categories = bx_fetch_all('select * from categories');
   <?php $current_page = 'categories'; ?>
   <?php include 'inc/sidebar.php'; ?>
 
-
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <script>
+    $(function($){
+
+      var $checkBoxs = $('tbody input');
+      var $btnDelete = $('#btn-delete');
+
+      var allCheckeds = [];
+
+      $checkBoxs.on('change',function(){
+        
+        var $id = $(this).data('id');
+
+        if($(this).prop('checked')){
+          allCheckeds.push($id);
+        }else{
+          allCheckeds.splice(allCheckeds.indexOf($id),1);
+        }
+
+        allCheckeds.length ? $btnDelete.fadeIn() : $btnDelete.fadeOut();
+        $btnDelete.prop('search','id=' + allCheckeds)
+
+      })
+
+    })
+  </script>
   <script>NProgress.done()</script>
 </body>
 </html>
