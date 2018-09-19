@@ -1,3 +1,12 @@
+<?php 
+
+require_once '../functions.php';
+// 检查用户是否登陆
+bx_get_current_user();
+
+$comments = bx_fetch_all('select * from comments');
+
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -50,42 +59,20 @@
           </tr>
         </thead>
         <tbody>
+          <?php foreach ($comments as $item): ?>
           <tr class="danger">
             <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>未批准</td>
+            <td><?php echo $item['author'] ?></td>
+            <td><?php echo $item['content'] ?></td>
+            <td><?php echo $item['email'] ?></td>
+            <td><?php echo $item['created'] ?></td>
+            <td><?php echo $item['status'] ?></td>
             <td class="text-center">
               <a href="post-add.html" class="btn btn-info btn-xs">批准</a>
               <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
             </td>
           </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="post-add.html" class="btn btn-warning btn-xs">驳回</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>大大</td>
-            <td>楼主好人，顶一个</td>
-            <td>《Hello world》</td>
-            <td>2016/10/07</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="post-add.html" class="btn btn-warning btn-xs">驳回</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
+          <?php endforeach ?>
         </tbody>
       </table>
     </div>

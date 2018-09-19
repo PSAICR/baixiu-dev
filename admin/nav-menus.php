@@ -1,3 +1,10 @@
+<?php 
+
+require_once '../functions.php';
+// 检查用户是否登陆
+bx_get_current_user();
+
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

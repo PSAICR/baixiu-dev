@@ -1,11 +1,17 @@
 <?php 
 
-session_start();
+require_once '../functions.php';
+// 检查用户是否登陆
+bx_get_current_user();
 
-if(empty($_SESSION['current_login_user'])){
-  // 未登录跳转到登录页
-  header('Location: /admin/login.php');
-}
+// 文章数
+$posts_count = bx_fetch_one('select count(1) as num from posts')['num'];
+// 草稿数
+$posts_drafted_count = bx_fetch_one("select count(1) as num from posts where status = 'drafted'")['num'];
+// 分类数
+$categories_count = bx_fetch_one('select count(1) as num from categories')['num'];
+// 评论数
+$comments_count = bx_fetch_one('select count(1) as num from comments')['num'];
 
 ?>
 <!DOCTYPE html>
@@ -37,9 +43,9 @@ if(empty($_SESSION['current_login_user'])){
               <h3 class="panel-title">站点内容统计：</h3>
             </div>
             <ul class="list-group">
-              <li class="list-group-item"><strong>10</strong>篇文章（<strong>2</strong>篇草稿）</li>
-              <li class="list-group-item"><strong>6</strong>个分类</li>
-              <li class="list-group-item"><strong>5</strong>条评论（<strong>1</strong>条待审核）</li>
+              <li class="list-group-item"><strong><?php echo $posts_count; ?></strong>篇文章（<strong><?php echo $posts_drafted_count ?></strong>篇草稿）</li>
+              <li class="list-group-item"><strong><?php echo $categories_count; ?></strong>个分类</li>
+              <li class="list-group-item"><strong><?php echo $comments_count; ?></strong>条评论（<strong>1</strong>条待审核）</li>
             </ul>
           </div>
         </div>

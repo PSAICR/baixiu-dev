@@ -1,3 +1,10 @@
+<?php 
+
+require_once '../functions.php';
+// 检查用户是否登陆
+bx_get_current_user();
+
+?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -101,8 +108,8 @@
   </div>
 
   <?php $current_page = 'posts'; ?>
+  <!--  侧边栏 -->
   <?php include 'inc/sidebar.php'; ?>
-
 
   <script src="/static/assets/vendors/jquery/jquery.js"></script>
   <script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
