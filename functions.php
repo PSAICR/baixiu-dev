@@ -64,8 +64,5 @@ function bx_execute($sql) {
 	// 对于增删修改类的操作都是获取受影响行数
   	$affected_rows = mysqli_affected_rows($conn);
 
-	mysqli_free_result($query);
-	mysqli_close($conn);
-
 	return $affected_rows;
 }

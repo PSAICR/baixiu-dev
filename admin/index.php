@@ -34,7 +34,7 @@ $comments_count = bx_fetch_one('select count(1) as num from comments')['num'];
       <div class="jumbotron text-center">
         <h1>One Belt, One Road</h1>
         <p>Thoughts, stories and ideas.</p>
-        <p><a class="btn btn-primary btn-lg" href="post-add.html" role="button">写文章</a></p>
+        <p><a class="btn btn-primary btn-lg" href="/admin/post-add.php" role="button">写文章</a></p>
       </div>
       <div class="row">
         <div class="col-md-4">

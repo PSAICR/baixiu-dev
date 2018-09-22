@@ -22,9 +22,38 @@ function add_categories() {
   $GLOBALS['message'] = $rows <= 0 ? '添加失败！' : '添加成功！';
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  add_categories();
+// 编辑分类
+function edit_category() {
+  global $current_edit_category;
+
+  // 接收并保存
+  $id = $current_edit_category['id'];
+  $name = empty($_POST['name']) ? $current_edit_category['name'] : $_POST['name'];
+  // 同步数据
+  $current_edit_category['name'] = $name;
+  $slug = empty($_POST['slug']) ? $current_edit_category['slug'] : $_POST['slug'];
+  $current_edit_category['slug'] = $slug;
+
+  // insert into categories values (null, 'slug', 'name');
+  $rows = bx_execute("update categories set slug = '{$slug}', name = '{$name}' where id = {$id}");
+
+  $GLOBALS['success'] = $rows > 0;
+  $GLOBALS['message'] = $rows <= 0 ? '更新失败！' : '更新成功！';
 }
+
+if(empty($_GET['id'])){
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    add_categories();
+  }
+}else{
+  $current_edit_category = bx_fetch_one('select * from categories where id = ' . $_GET['id']);
+
+  // 确认编辑
+  if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    edit_category();
+  }
+}
+
 
 $categories = bx_fetch_all('select * from categories');
 
@@ -57,6 +86,23 @@ $categories = bx_fetch_all('select * from categories');
       <?php endif ?>      
       <div class="row">
         <div class="col-md-4">
+          <?php if (isset($current_edit_category)): ?>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $current_edit_category['id'] ?>" method="post" autocomplete="off">
+            <h2>编辑目录  '<?php echo $current_edit_category['name']; ?>'</h2>
+            <div class="form-group">
+              <label for="name">名称</label>
+              <input id="name" class="form-control" name="name" type="text" value="<?php echo $current_edit_category['name']; ?>">
+            </div>
+            <div class="form-group">
+              <label for="slug">别名</label>
+              <input id="slug" class="form-control" name="slug" type="text" value="<?php echo $current_edit_category['slug']; ?>">
+              <p class="help-block">https://zce.me/category/<strong>slug</strong></p>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary" type="submit">添加</button>
+            </div>
+          </form>
+          <?php else: ?>
           <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
             <h2>添加新分类目录</h2>
             <div class="form-group">
@@ -72,6 +118,8 @@ $categories = bx_fetch_all('select * from categories');
               <button class="btn btn-primary" type="submit">添加</button>
             </div>
           </form>
+          <?php endif ?>
+          
         </div>
         <div class="col-md-8">
           <div class="page-action">

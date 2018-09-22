@@ -74,6 +74,7 @@ $comments = bx_fetch_all('select * from comments');
           </tr>
           <?php endforeach ?>
         </tbody>
+        
       </table>
     </div>
   </div>

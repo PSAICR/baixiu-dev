@@ -63,13 +63,14 @@ function login(){
 
   // 检验成功，进行跳转
   header('location: /admin/');
-  header('Content-Type:text/html');
-  header('charset=UTF-8');
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
   login();
 }
+
+// 退出功能
+if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['']))
 
 ?>
 <!DOCTYPE html>
