@@ -15,6 +15,7 @@ $categories = bx_fetch_all('select * from categories');
   //数据校验
   //---------------------------------------
   if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $GLOBALS['success'] = false;
     if(empty($_POST['title'])
     || empty($_POST['slug'])
     || empty($_POST['feature'])
@@ -29,9 +30,43 @@ $categories = bx_fetch_all('select * from categories');
       $message = 'slug重复,请重新填写slug';
     }else{
       //数据合法
-      //持久化
-      //---------------------------------------
-      // bx_execute()
+      //接收数据
+      //-----------------------------------
+      $title = $_POST['title'];
+      $slug = $_POST['slug'];
+      $feature = '';
+      $category_id = $_POST['category'];
+      $created = $_POST['created'];
+      $status = $_POST['status'];
+      $content = $_POST['content'];
+      $user_id = 1;
+
+      //保存数据
+      //-------------------------------------
+      //拼接查询语句
+      // $sql = sprintf(
+      //   "insert into posts values (null, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', %d, %d)",
+      //   $slug,
+      //   $title,
+      //   $feature,
+      //   $created,
+      //   $content,
+      //   $status,
+      //   $user_id,
+      //   $category_id
+      // );
+      $sql = "insert into posts values (null,'{$slug}','{$title}','{$feature}','{$created}','{$content}',0,0,'{$status}',1,1);";
+
+      // //sql保存数据
+      if (bx_execute($sql) > 0) {
+        //保存成功
+        $message = '文章保存成功';
+        $success = true;
+      }else{
+        //保存失败
+        $message = '文章保存失败';
+      }
+
     }
   }
       
@@ -61,12 +96,12 @@ $categories = bx_fetch_all('select * from categories');
         <h1>写文章</h1>
       </div>
       <!-- 有错误信息时展示 -->
-      <?php if (!empty($message)): ?>
-      <div class="alert alert-danger">
-        <strong>错误！</strong><?php echo $message; ?>
-      </div>
+      <?php if(!empty($message)): ?>
+        <div class="alert<?php echo !$success?' alert-danger':' alert-success'; ?>">
+          <strong><?php echo $success?'':'错误！'; ?></strong><?php echo $message; ?>
+        </div>
       <?php endif ?>
-      <form class="row" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+      <form class="row" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
         <div class="col-md-9">
           <div class="form-group">
             <label for="title">标题</label>
