@@ -124,7 +124,7 @@ $categories = bx_fetch_all('select * from categories');
         <div class="col-md-8">
           <div class="page-action">
             <!-- show when multiple checked -->
-            <a id="btn-delete" class="btn btn-danger btn-sm" href="/admin/category-delete.php?id=<?php echo $item['id']; ?>" style="display: none">批量删除</a>
+            <a id="btn-delete" class="btn btn-danger btn-sm" href="/admin/category-delete.php" style="display: none">批量删除</a>
           </div>
           <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -180,6 +180,11 @@ $categories = bx_fetch_all('select * from categories');
         allCheckeds.length ? $btnDelete.fadeIn() : $btnDelete.fadeOut();
         $btnDelete.prop('search','id=' + allCheckeds)
 
+      })
+
+      $('thead input').on('change',function(){
+      	checked = $(this).prop('checked');
+      	$checkBoxs.prop('checked',checked).trigger('change');
       })
 
     })
